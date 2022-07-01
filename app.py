@@ -23,11 +23,20 @@ def answer():
     messages.append(request.form.get('message'))
     if len(messages) > 3:
         messages.pop(0)
-     # vote.htmlに渡す内容を変数message_htmlとしてつくる
+    # vote.htmlに渡す内容を変数message_htmlとしてつくる
     message_html = ''
     for i in range(len(messages)):
         c = 'alert-warning ms-5' if i % 2 == 0 else 'alert-success me-5'
         m = messages[i]
+        # HTMLインジェクション対策
+        import re
+        m = re.sub(r'&', r'&amp;', m)
+        m = re.sub(r'<', r'&lt;', m)
+        m = re.sub(r'>', r'&gt;', m)
+        # メッセージのフォーマット
+        m = re.sub(r'\*(.+)\*', r'<strong>\1</strong>', m)
+        m = re.sub(r'(\d{2,3})-\d+-\d+', r'\1-****-****', m)
+        m = re.sub(r'(https?://[a-zA-Z0-9-_^/&=%+#.]+)',r'<p>For details, see<a href="\1">\1</a>!</p>',m)
         message_html += f'<div class="alert {c}" role="alert">{m}</div>\n'
     #進捗グラフの更新
     kinoko_percent = kinoko_count/(kinoko_count+takenoko_count)*100
