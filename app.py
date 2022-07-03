@@ -36,6 +36,7 @@ def answer():
         # メッセージのフォーマット
         m = re.sub(r'\*(.+)\*', r'<strong>\1</strong>', m)
         m = re.sub(r'(\d{2,3})-\d+-\d+', r'\1-****-****', m)
+        # URL検出（課題）
         m = re.sub(r'(https?://[a-zA-Z0-9-_^/&=%+#.]+)',r'<p>For details, see<a href="\1">\1</a>!</p>',m)
         message_html += f'<div class="alert {c}" role="alert">{m}</div>\n'
     #進捗グラフの更新
